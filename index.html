@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MidTown Minya - المنيو الرقمي</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #121212; color: #e0e0e0; padding-bottom: 80px; }
+        
+        header { background-color: #000; padding: 15px; text-align: center; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 10; }
+        header h1 { color: #d4af37; font-size: 20px; margin-bottom: 2px; }
+        header p { color: #888; font-size: 11px; }
+        
+        .hero { text-align: center; padding: 20px; background: linear-gradient(to bottom, #1a1a1a, #121212); border-bottom: 1px solid #222; }
+        .hero h2 { font-size: 18px; margin-bottom: 4px; }
+        .hero p { color: #888; font-size: 12px; }
+        
+        .controls { padding: 15px; max-width: 480px; margin: 0 auto; }
+        .search-box { width: 100%; padding: 12px; border-radius: 10px; background: #1e1e1e; border: 1px solid #333; color: #fff; font-size: 13px; margin-bottom: 12px; outline: none; }
+        
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+        .cat-btn { background: #1e1e1e; color: #ccc; border: none; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; whitespace-nowrap; transition: 0.2s; }
+        .cat-btn.active { background: #d4af37; color: #000; }
+        
+        .menu-list { padding: 0 15px; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .menu-item { background: #181818; border: 1px solid #262626; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info { display: flex; align-items: center; gap: 12px; }
+        .item-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #333; }
+        .item-details h3 { font-size: 14px; color: #fff; }
+        .item-details p { font-size: 11px; color: #888; margin-top: 2px; }
+        .item-price { color: #d4af37; font-weight: bold; font-size: 13px; margin-top: 4px; display: block; }
+        
+        .order-btn { background: rgba(212, 175, 55, 0.15); border: 1px solid #d4af37; color: #d4af37; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer; }
+        .order-btn:active { background: #d4af37; color: #000; }
+        
+        /* Modal Window */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; padding: 20px; z-index: 100; }
+        .modal-overlay.show { display: flex; }
+        .modal-card { background: #1e1e1e; border: 1px solid #333; border-radius: 16px; padding: 20px; width: 100%; max-width: 320px; text-align: center; }
+        .modal-card h3 { color: #fff; font-size: 16px; margin-bottom: 8px; }
+        .modal-card p { color: #bbb; font-size: 13px; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 10px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; font-size: 12px; }
+        .btn-cancel { background: #333; color: #ccc; }
+        .btn-confirm { background: #d4af37; color: #000; }
+        
+        footer { margin-top: 30px; text-align: center; font-size: 11px; color: #666; padding: 15px; border-top: 1px solid #222; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>MidTown Minya</h1>
+        <p>أفضل تجربة قهوة ومأكولات في المنيا</p>
+    </header>
+
+    <div class="hero">
+        <h2>استمتع بقهوتك المفضلة ☕</h2>
+        <p>منطقة السلامي - مدينة المنيا</p>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="searchInput" onkeyup="filterMenu()" placeholder="ابحث عن مشروبك أو وجبتك..." class="search-box">
+        
+        <div class="categories">
+            <button onclick="filterCategory('all', this)" class="cat-btn active">الكل</button>
+            <button onclick="filterCategory('coffee', this)" class="cat-btn">قهوة</button>
+            <button onclick="filterCategory('cold', this)" class="cat-btn">مشروبات باردة</button>
+            <button onclick="filterCategory('dessert', this)" class="cat-btn">حلويات</button>
+        </div>
+    </div>
+
+    <div class="menu-list" id="menuList">
+        
+        <!-- Item 1 -->
+        <div class="menu-item coffee">
+            <div class="item-info">
+                <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=150" alt="سبانيش لاتيه" class="item-img">
+                <div class="item-details">
+                    <h3>سبانيش لاتيه (Spanish Latte)</h3>
+                    <p>إسبريسو غني مع حليب مكثف</p>
+                    <span class="item-price">85 ج.م</span>
+                </div>
+            </div>
+            <button onclick="confirmOrder('سبانيش لاتيه', '85 ج.م')" class="order-btn">طلب</button>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="menu-item cold">
+            <div class="item-info">
+                <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=150" alt="موخيتو" class="item-img">
+                <div class="item-details">
+                    <h3>موخيتو بلو بيري (Mojito)</h3>
+                    <p>سودا، صوص بلوبيري ونعناع</p>
+                    <span class="item-price">65 ج.م</span>
+                </div>
+            </div>
+            <button onclick="confirmOrder('موخيتو بلو بيري', '65 ج.م')" class="order-btn">طلب</button>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="menu-item dessert">
+            <div class="item-info">
+                <img src="https://images.unsplash.com/photo-1562440499-64c9a111f713?w=150" alt="وافل" class="item-img">
+                <div class="item-details">
+                    <h3>وافل فور سيزونز (Waffle)</h3>
+                    <p>وافل مقرمش مع 4 صوصات</p>
+                    <span class="item-price">120 ج.م</span>
+                </div>
+            </div>
+            <button onclick="confirmOrder('وافل فور سيزونز', '120 ج.م')" class="order-btn">طلب</button>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div id="orderModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>تأكيد الطلب 🛒</h3>
+            <p id="modalItemText">هل تريد إرسال الطلب عبر الواتساب؟</p>
+            <div class="modal-actions">
+                <button onclick="closeModal()" class="modal-btn btn-cancel">إلغاء</button>
+                <button id="confirmBtn" class="modal-btn btn-confirm">تأكيد وإرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>📍 المنيا - حي السلامي | 🕒 مفتوح يومياً</p>
+        <p style="margin-top: 5px;">تم التطوير بواسطة أبانوب سامي © 2026</p>
+    </footer>
+
+    <script>
+        let selectedItemName = "";
+        let selectedItemPrice = "";
+
+        function filterCategory(category, btnElement) {
+            let buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            let items = document.querySelectorAll('.menu-item');
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filterMenu() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let items = document.querySelectorAll('.menu-item');
+            items.forEach(item => {
+                let text = item.innerText.toLowerCase();
+                item.style.display = text.includes(input) ? 'flex' : 'none';
+            });
+        }
+
+        function confirmOrder(itemName, itemPrice) {
+            selectedItemName = itemName;
+            selectedItemPrice = itemPrice;
+            document.getElementById('modalItemText').innerText = `هل تريد تأكيد طلب "${itemName}" بسعر ${itemPrice}؟`;
+            document.getElementById('orderModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('show');
+        }
+
+        document.getElementById('confirmBtn').onclick = function() {
+            let phone = "201000000000";
+            let message = encodeURIComponent(`مرحباً MidTown، أرغب في طلب:\n- ${selectedItemName} (${selectedItemPrice})`);
+            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            closeModal();
+        }
+    </script>
+</body>
+</html>
